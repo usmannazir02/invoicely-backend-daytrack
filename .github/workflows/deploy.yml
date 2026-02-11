@@ -29,6 +29,7 @@ jobs:
           username: sigmolabs    
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
+          debug: true
           script: |
             cd /home/sigmolabs/invoicely-backend
             git pull origin main
