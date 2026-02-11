@@ -28,7 +28,7 @@ jobs:
           host: 198.187.31.203 
           username: sigmolabs    
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
+          port: 21098
           debug: true
           script: |
             cd /home/sigmolabs/invoicely-backend
