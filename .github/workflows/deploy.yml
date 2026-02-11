@@ -32,6 +32,8 @@ jobs:
           debug: true
           script: |
             cd /home/sigmolabs/invoicely-backend
+            git fetch origin
+            git reset --hard origin/main
             git pull origin main
             # Activate Node environment and update
             source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
