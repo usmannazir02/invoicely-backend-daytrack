@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Build Project
+      - name: Build Project Locally
         run: |
           npm install
           npm run build
@@ -29,13 +29,15 @@ jobs:
           username: sigmolabs    
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 21098
-          debug: true
           script: |
             cd /home/sigmolabs/invoicely-backend
             git fetch origin
             git reset --hard origin/main
             git pull origin main
-            # Activate Node environment and update
             source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
             npm install --production
+            # Critical: Rebuild the project on the server to update the /dist folder
+            npm run build
+            # Ensure tmp directory exists and trigger restart
+            mkdir -p tmp
             touch tmp/restart.txt
