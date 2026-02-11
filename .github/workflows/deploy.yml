@@ -35,18 +35,18 @@ jobs:
             git reset --hard origin/main
             git pull origin main
             
-            # Activate the specific Node.js virtual environment for this app
+            # 1. Activate the Virtual Environment
             source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
             
-            # Install all dependencies (including dev) to ensure build tools are present
+            # 2. Use the cPanel-friendly way to install dependencies
+            # This ensures they go into the virtual environment instead of a local folder
             npm install --include=dev
             
-            # Use the local project binary to build, bypassing the "command not found" error
-            ./node_modules/.bin/nest build
+            # 3. Use 'npx' to find the nest binary
+            # Since 'node_modules' is a symlink, npx is more reliable for finding binaries
+            npx nest build
             
-            # Remove dev dependencies to keep the production environment clean
+            # 4. Cleanup and Restart
             npm prune --production
-            
-            # Create the restart trigger directory and file
             mkdir -p tmp
             touch tmp/restart.txt
