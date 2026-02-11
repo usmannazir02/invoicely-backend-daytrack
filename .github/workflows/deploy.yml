@@ -1,4 +1,4 @@
-name: Deploy NestJS to cPanel
+name: Deploy via SSH
 
 on:
   push:
@@ -6,9 +6,8 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -18,27 +17,22 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Dependencies
-        run: npm install
-
       - name: Build Project
-        run: npm run build
+        run: |
+          npm install
+          npm run build
 
-      - name: Sync files to cPanel
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy to cPanel
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          timeout: 90000
-          protocol: ftp
-          local-dir: ./
-          exclude: |
-            **/.git*
-            **/.github*
-            node_modules/**
-            src/**
-            test/**
-            *.md
-            tsconfig*.json
-            .env
+          host: 198.187.31.203 
+          username: sigmolabs    
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/sigmolabs/invoicely-backend
+            git pull origin main
+            # Activate Node environment and update
+            source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
+            npm install --production
+            touch tmp/restart.txt
