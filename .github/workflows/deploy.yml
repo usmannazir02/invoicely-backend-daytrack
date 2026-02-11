@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Build Project Locally
+      - name: Local Build Check
         run: |
           npm install
           npm run build
@@ -25,8 +25,8 @@ jobs:
       - name: Deploy to cPanel
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 198.187.31.203 
-          username: sigmolabs    
+          host: 198.187.31.203
+          username: sigmolabs
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 21098
           script: |
@@ -34,10 +34,19 @@ jobs:
             git fetch origin
             git reset --hard origin/main
             git pull origin main
+            
+            # Activate the specific Node.js virtual environment for this app
             source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
-            npm install --production
-            # Critical: Rebuild the project on the server to update the /dist folder
-            npm run build
-            # Ensure tmp directory exists and trigger restart
+            
+            # Install all dependencies (including dev) to ensure build tools are present
+            npm install --include=dev
+            
+            # Use the local project binary to build, bypassing the "command not found" error
+            ./node_modules/.bin/nest build
+            
+            # Remove dev dependencies to keep the production environment clean
+            npm prune --production
+            
+            # Create the restart trigger directory and file
             mkdir -p tmp
             touch tmp/restart.txt
