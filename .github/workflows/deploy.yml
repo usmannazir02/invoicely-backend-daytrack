@@ -29,13 +29,12 @@ jobs:
             # 2. Activate the Server's Virtual Environment
             source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
             
-            # 3. Install build tools into the virtualenv
-            # This ensures the compiler exists on the server without touching the app root
+            # 3. Install build tools into the virtualenv to satisfy CloudLinux requirements
             npm install --prefix /home/sigmolabs/nodevenv/invoicely-backend/20 @nestjs/cli typescript @types/node
             
-            # 4. Build using the Direct Path to the binary
-            # We use the full path to the binary located in the nodevenv bin folder
-            /home/sigmolabs/nodevenv/invoicely-backend/20/bin/nest build
+            # 4. Build using npx
+            # npx will search the active virtual environment to find the 'nest' binary
+            npx nest build
             
             # 5. Finalize and Restart
             mkdir -p tmp
