@@ -12,16 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Local Build Check
-        run: |
-          npm install
-          npm run build
-
       - name: Deploy to cPanel
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -30,23 +20,23 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 21098
           script: |
+            # 1. Sync the code
             cd /home/sigmolabs/invoicely-backend
             git fetch origin
             git reset --hard origin/main
             git pull origin main
             
-            # 1. Activate the Virtual Environment
+            # 2. Activate the Server's Virtual Environment
             source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
             
-            # 2. Use the cPanel-friendly way to install dependencies
-            # This ensures they go into the virtual environment instead of a local folder
-            npm install --include=dev
+            # 3. Install build tools into the virtualenv to avoid root conflicts
+            # This satisfies the CloudLinux demand by not touching the 'node_modules' symlink
+            npm install --prefix /home/sigmolabs/nodevenv/invoicely-backend/20 @nestjs/cli typescript @types/node
             
-            # 3. Use 'npx' to find the nest binary
-            # Since 'node_modules' is a symlink, npx is more reliable for finding binaries
-            npx nest build
+            # 4. Build using the ABSOLUTE path to the Nest binary
+            # This ensures 'nest build' runs even if the command isn't in your local path
+            /home/sigmolabs/nodevenv/invoicely-backend/20/bin/nest build
             
-            # 4. Cleanup and Restart
-            npm prune --production
+            # 5. Finalize and Restart
             mkdir -p tmp
             touch tmp/restart.txt
