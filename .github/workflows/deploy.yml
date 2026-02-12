@@ -29,13 +29,14 @@ jobs:
             # 2. Activate the Server's Virtual Environment
             source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
             
-            # 3. Install build tools into the virtualenv to avoid root conflicts
-            # This satisfies the CloudLinux demand by not touching the 'node_modules' symlink
+            # 3. Install build tools into the virtualenv
+            # We use the virtualenv root to ensure tools are available to npx
             npm install --prefix /home/sigmolabs/nodevenv/invoicely-backend/20 @nestjs/cli typescript @types/node
             
-            # 4. Build using the ABSOLUTE path to the Nest binary
-            # This ensures 'nest build' runs even if the command isn't in your local path
-            /home/sigmolabs/nodevenv/invoicely-backend/20/bin/nest build
+            # 4. Build using npx
+            # npx will automatically find the 'nest' binary we just installed
+            cd /home/sigmolabs/invoicely-backend
+            npx nest build
             
             # 5. Finalize and Restart
             mkdir -p tmp
