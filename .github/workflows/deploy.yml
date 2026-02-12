@@ -30,13 +30,12 @@ jobs:
             source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
             
             # 3. Install build tools into the virtualenv
-            # We use the virtualenv root to ensure tools are available to npx
+            # This ensures the compiler exists on the server without touching the app root
             npm install --prefix /home/sigmolabs/nodevenv/invoicely-backend/20 @nestjs/cli typescript @types/node
             
-            # 4. Build using npx
-            # npx will automatically find the 'nest' binary we just installed
-            cd /home/sigmolabs/invoicely-backend
-            npx nest build
+            # 4. Build using the Direct Path to the binary
+            # We use the full path to the binary located in the nodevenv bin folder
+            /home/sigmolabs/nodevenv/invoicely-backend/20/bin/nest build
             
             # 5. Finalize and Restart
             mkdir -p tmp
