@@ -27,7 +27,12 @@ export abstract class AbstractRepository<T extends AbstractEntity<T>> {
     }
 
     async create(entity: T | T[]): Promise<T | T[]> {
-        return this.entityManager.save(entity);
+        return this.itemsRepository.save(entity as any);
+    }
+
+    async createEntity(data: Partial<T>): Promise<T> {
+        const entity = this.itemsRepository.create(data as any);
+        return this.itemsRepository.save(entity) as unknown as Promise<T>;
     }
 
     async findOne(
