@@ -25,6 +25,7 @@ jobs:
             git fetch origin
             git reset --hard origin/main
             git pull origin main
+            npm install
             
             # 2. Activate the Server's Virtual Environment
             source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
