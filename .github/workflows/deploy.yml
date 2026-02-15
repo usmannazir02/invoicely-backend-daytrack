@@ -25,20 +25,22 @@ jobs:
             git fetch origin
             git reset --hard origin/main
             git pull origin main
-            npm install
             
-            # 2. Activate the Server's Virtual Environment
+            # 2. ACTIVATE the Virtual Environment FIRST
+            # npm will be "command not found" until this line runs
             source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
             
-            # 3. Install build tools into the virtualenv BINARY path
-            # This makes the 'nest' command available directly in the shell
+            # 3. Install project dependencies (including cookie-parser)
+            # This fixes the "Cannot find module 'cookie-parser'" error
+            npm install
+            npm install cookie-parser @types/cookie-parser
+            
+            # 4. Install build tools into the virtualenv binary path
             npm install -g @nestjs/cli typescript @types/node
             
-            # 4. Build the project
-            # Since the environment is activated and tools are installed 'globally' 
-            # within the virtualenv, we can just call 'nest'
+            # 5. Build the project
             nest build
             
-            # 5. Finalize and Restart
+            # 6. Finalize and Restart
             mkdir -p tmp
             touch tmp/restart.txt
