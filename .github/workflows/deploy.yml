@@ -33,7 +33,6 @@ jobs:
             # 3. Install project dependencies (including cookie-parser)
             # This fixes the "Cannot find module 'cookie-parser'" error
             npm install
-            npm install cookie-parser @types/cookie-parser
             
             # 4. Install build tools into the virtualenv binary path
             npm install -g @nestjs/cli typescript @types/node

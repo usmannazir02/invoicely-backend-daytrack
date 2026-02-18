@@ -6,6 +6,7 @@ import { DatabaseModule } from './lib/common/database/sql/database.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductsModule } from './products/products.module';
+import { QuotesModule } from './quotes/quotes.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ProductsModule } from './products/products.module';
     UsersModule,
     AuthModule,
     ProductsModule,
+    QuotesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

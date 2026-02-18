@@ -18,8 +18,9 @@ export class AuthController {
         res.cookie('access_token', result.access_token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            sameSite: 'lax', // 'lax' allows cookie on same-site navigation (refresh)
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            path: '/',
         });
 
         return generateResponse(result, 'Login successful', res, HttpStatus.OK);
@@ -33,7 +34,8 @@ export class AuthController {
         res.clearCookie('access_token', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax',
+            path: '/',
         });
 
         return generateResponse(null, 'Logout successful', res, HttpStatus.OK);
