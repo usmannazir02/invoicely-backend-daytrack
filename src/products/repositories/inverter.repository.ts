@@ -6,13 +6,13 @@ import { Inverter } from '../entities/inverter.entity';
 
 @Injectable()
 export class InverterRepository extends AbstractRepository<Inverter> {
-    protected readonly logger = new Logger(InverterRepository.name);
+  protected readonly logger = new Logger(InverterRepository.name);
 
-    constructor(
-        @InjectRepository(Inverter)
-        private readonly inverterRepository: Repository<Inverter>,
-        entityManager: EntityManager,
-    ) {
-        super(inverterRepository, entityManager);
-    }
+  constructor(
+    @InjectRepository(Inverter)
+    private readonly inverterRepository: Repository<Inverter>,
+    entityManager: EntityManager,
+  ) {
+    super(inverterRepository, entityManager);
+  }
 }

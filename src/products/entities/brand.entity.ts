@@ -4,31 +4,31 @@ import { Inverter } from './inverter.entity';
 import { SolarPanel } from './solar-panel.entity';
 
 export enum BrandType {
-    INVERTER = 'inverter',
-    SOLAR_PANEL = 'solar_panel',
+  INVERTER = 'inverter',
+  SOLAR_PANEL = 'solar_panel',
 }
 
 @Entity('brands')
 export class Brand extends AbstractEntity<Brand> {
-    constructor(partial?: Partial<Brand>) {
-        super(partial || {});
-    }
+  constructor(partial?: Partial<Brand>) {
+    super(partial || {});
+  }
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column({
-        type: 'enum',
-        enum: BrandType,
-    })
-    type: BrandType;
+  @Column({
+    type: 'enum',
+    enum: BrandType,
+  })
+  type: BrandType;
 
-    @Column({ default: true })
-    isActive: boolean;
+  @Column({ default: true })
+  isActive: boolean;
 
-    @OneToMany(() => Inverter, (inverter) => inverter.brand)
-    inverters: Inverter[];
+  @OneToMany(() => Inverter, (inverter) => inverter.brand)
+  inverters: Inverter[];
 
-    @OneToMany(() => SolarPanel, (solarPanel) => solarPanel.brand)
-    solarPanels: SolarPanel[];
+  @OneToMany(() => SolarPanel, (solarPanel) => solarPanel.brand)
+  solarPanels: SolarPanel[];
 }

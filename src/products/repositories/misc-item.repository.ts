@@ -6,13 +6,13 @@ import { MiscItem } from '../entities/misc-item.entity';
 
 @Injectable()
 export class MiscItemRepository extends AbstractRepository<MiscItem> {
-    protected readonly logger = new Logger(MiscItemRepository.name);
+  protected readonly logger = new Logger(MiscItemRepository.name);
 
-    constructor(
-        @InjectRepository(MiscItem)
-        private readonly miscItemRepository: Repository<MiscItem>,
-        entityManager: EntityManager,
-    ) {
-        super(miscItemRepository, entityManager);
-    }
+  constructor(
+    @InjectRepository(MiscItem)
+    private readonly miscItemRepository: Repository<MiscItem>,
+    entityManager: EntityManager,
+  ) {
+    super(miscItemRepository, entityManager);
+  }
 }

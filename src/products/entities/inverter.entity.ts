@@ -4,25 +4,25 @@ import { Brand } from './brand.entity';
 
 @Entity('inverters')
 export class Inverter extends AbstractEntity<Inverter> {
-    @Column()
-    model: string;
+  @Column()
+  model: string;
 
-    @Column('decimal', { precision: 10, scale: 2 })
-    price: number;
+  @Column('decimal', { precision: 10, scale: 2 })
+  price: number;
 
-    @Column({ nullable: true })
-    description: string;
+  @Column({ nullable: true })
+  description: string;
 
-    @Column({ nullable: true })
-    capacity: string; // e.g., "5kW", "10kW"
+  @Column({ nullable: true })
+  capacity: string; // e.g., "5kW", "10kW"
 
-    @Column({ default: true })
-    isActive: boolean;
+  @Column({ default: true })
+  isActive: boolean;
 
-    @ManyToOne(() => Brand, (brand) => brand.inverters, { eager: true })
-    @JoinColumn({ name: 'brandId' })
-    brand: Brand;
+  @ManyToOne(() => Brand, (brand) => brand.inverters, { eager: true })
+  @JoinColumn({ name: 'brandId' })
+  brand: Brand;
 
-    @Column()
-    brandId: string;
+  @Column()
+  brandId: string;
 }

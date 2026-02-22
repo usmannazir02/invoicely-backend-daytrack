@@ -1,16 +1,28 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 import { StructureType } from '../entities/structure.entity';
 
 export class CreateStructureDto {
-    @IsEnum(StructureType)
-    @IsNotEmpty()
-    type: StructureType;
+  @IsEnum(StructureType)
+  @IsNotEmpty()
+  type: StructureType;
 
-    @IsNumber()
-    @IsPositive()
-    price: number;
+  @IsNumber()
+  @IsPositive()
+  price: number;
 
-    @IsString()
-    @IsOptional()
-    description?: string;
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 }

@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && mkdir -p tmp && touch tmp/restart.txt",
+    "build": "nest build && node -e \"const fs=require('fs'); fs.mkdirSync('tmp',{recursive:true}); fs.closeSync(fs.openSync('tmp/restart.txt','a'));\"",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

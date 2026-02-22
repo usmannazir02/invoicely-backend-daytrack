@@ -1,9 +1,9 @@
 import { Response } from 'express';
 
 export interface ApiResponse<T = any> {
-    statusCode: number;
-    message: string;
-    data?: T;
+  statusCode: number;
+  message: string;
+  data?: T;
 }
 
 /**
@@ -15,14 +15,14 @@ export interface ApiResponse<T = any> {
  * @returns Formatted JSON response
  */
 export const generateResponse = <T = any>(
-    data: T,
-    message: string,
-    res: Response,
-    code: number = 200,
+  data: T,
+  message: string,
+  res: Response,
+  code: number = 200,
 ): Response<ApiResponse<T>> => {
-    return res.status(code).json({
-        statusCode: code,
-        message,
-        data,
-    });
+  return res.status(code).json({
+    statusCode: code,
+    message,
+    data,
+  });
 };

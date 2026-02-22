@@ -4,7 +4,7 @@ import { CreateQuoteDto } from './create-quote.dto';
 import { QuoteStatus } from '../entities';
 
 export class UpdateQuoteDto extends PartialType(CreateQuoteDto) {
-    @IsEnum(QuoteStatus)
-    @IsOptional()
-    status?: QuoteStatus;
+  @IsEnum(QuoteStatus)
+  @IsOptional()
+  status?: QuoteStatus;
 }

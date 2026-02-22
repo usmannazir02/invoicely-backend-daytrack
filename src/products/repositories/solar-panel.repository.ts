@@ -6,13 +6,13 @@ import { SolarPanel } from '../entities/solar-panel.entity';
 
 @Injectable()
 export class SolarPanelRepository extends AbstractRepository<SolarPanel> {
-    protected readonly logger = new Logger(SolarPanelRepository.name);
+  protected readonly logger = new Logger(SolarPanelRepository.name);
 
-    constructor(
-        @InjectRepository(SolarPanel)
-        private readonly solarPanelRepository: Repository<SolarPanel>,
-        entityManager: EntityManager,
-    ) {
-        super(solarPanelRepository, entityManager);
-    }
+  constructor(
+    @InjectRepository(SolarPanel)
+    private readonly solarPanelRepository: Repository<SolarPanel>,
+    entityManager: EntityManager,
+  ) {
+    super(solarPanelRepository, entityManager);
+  }
 }

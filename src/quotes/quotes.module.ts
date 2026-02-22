@@ -6,9 +6,9 @@ import { QuoteRepository } from './quote.repository';
 import { Quote, QuoteItem } from './entities';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Quote, QuoteItem])],
-    controllers: [QuoteController],
-    providers: [QuoteService, QuoteRepository],
-    exports: [QuoteService],
+  imports: [TypeOrmModule.forFeature([Quote, QuoteItem])],
+  controllers: [QuoteController],
+  providers: [QuoteService, QuoteRepository],
+  exports: [QuoteService],
 })
-export class QuotesModule { }
+export class QuotesModule {}

@@ -6,13 +6,13 @@ import { Structure } from '../entities/structure.entity';
 
 @Injectable()
 export class StructureRepository extends AbstractRepository<Structure> {
-    protected readonly logger = new Logger(StructureRepository.name);
+  protected readonly logger = new Logger(StructureRepository.name);
 
-    constructor(
-        @InjectRepository(Structure)
-        private readonly structureRepository: Repository<Structure>,
-        entityManager: EntityManager,
-    ) {
-        super(structureRepository, entityManager);
-    }
+  constructor(
+    @InjectRepository(Structure)
+    private readonly structureRepository: Repository<Structure>,
+    entityManager: EntityManager,
+  ) {
+    super(structureRepository, entityManager);
+  }
 }
