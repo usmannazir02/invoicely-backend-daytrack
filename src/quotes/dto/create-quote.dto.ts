@@ -54,7 +54,7 @@ export class CreateQuoteDto {
   @IsOptional()
   customerPhone?: string;
 
-  @IsEmail()
+  @IsEmail({}, { message: 'Please provide a valid email address format (e.g., name@example.com)' })
   @IsOptional()
   customerEmail?: string;
 

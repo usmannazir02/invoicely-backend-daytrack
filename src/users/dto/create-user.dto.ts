@@ -13,7 +13,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   fullName: string;
 
-  @IsEmail()
+  @IsEmail({}, { message: 'Please provide a valid email address format (e.g., name@example.com)' })
   @IsNotEmpty()
   email: string;
 

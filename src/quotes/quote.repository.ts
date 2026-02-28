@@ -52,6 +52,41 @@ export class QuoteRepository extends AbstractRepository<Quote> {
     };
   }
 
+  async findAllForAdmin(
+    page: number,
+    limit: number,
+    status?: string,
+    salesUserId?: string,
+  ) {
+    const queryBuilder = this.quoteRepository
+      .createQueryBuilder('quote')
+      .leftJoinAndSelect('quote.items', 'items')
+      .leftJoinAndSelect('quote.createdBy', 'createdBy');
+
+    if (salesUserId) {
+      queryBuilder.andWhere('quote.createdById = :salesUserId', { salesUserId });
+    }
+
+    if (status) {
+      queryBuilder.andWhere('quote.status = :status', { status });
+    }
+
+    queryBuilder
+      .orderBy('quote.createdAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    const [items, total] = await queryBuilder.getManyAndCount();
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
   async findWithItems(id: string): Promise<Quote> {
     return this.quoteRepository
       .createQueryBuilder('quote')

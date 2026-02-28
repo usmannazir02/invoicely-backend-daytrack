@@ -30,4 +30,8 @@ export class FilterQuoteDto {
   @IsString()
   @IsOptional()
   sortOrder?: 'ASC' | 'DESC' = 'DESC';
+
+  @IsString()
+  @IsOptional()
+  salesUserId?: string;
 }

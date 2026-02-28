@@ -5,6 +5,7 @@ import { QuoteItem } from './quote-item.entity';
 
 export enum QuoteStatus {
   DRAFT = 'draft',
+  CREATED = 'created',
   SENT = 'sent',
   ACCEPTED = 'accepted',
   REJECTED = 'rejected',

@@ -11,7 +11,7 @@ import { UserRole } from '../lib/common/enums/roles.enum';
 
 @Injectable()
 export class QuoteService {
-  constructor(private readonly quoteRepository: QuoteRepository) {}
+  constructor(private readonly quoteRepository: QuoteRepository) { }
 
   async create(createQuoteDto: CreateQuoteDto, user: User): Promise<Quote> {
     // Calculate totals
@@ -71,12 +71,16 @@ export class QuoteService {
   }
 
   async findAll(filterDto: FilterQuoteDto, user: User) {
-    const { page = 1, limit = 10, status } = filterDto;
+    const { page = 1, limit = 10, status, salesUserId } = filterDto;
 
     // Admins can see all quotes, sales users can only see their own
     if (user.role === UserRole.ADMIN) {
-      // For admin, implement a different method if needed
-      return this.quoteRepository.findByUserId(user.id!, page, limit, status);
+      return this.quoteRepository.findAllForAdmin(
+        page,
+        limit,
+        status,
+        salesUserId,
+      );
     }
 
     return this.quoteRepository.findByUserId(user.id!, page, limit, status);
