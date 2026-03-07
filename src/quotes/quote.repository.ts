@@ -43,12 +43,33 @@ export class QuoteRepository extends AbstractRepository<Quote> {
 
     const [items, total] = await queryBuilder.getManyAndCount();
 
+    // calculate global aggregate stats
+    const statsQuery = this.quoteRepository
+      .createQueryBuilder('quote')
+      .select('SUM(quote.finalAmount)', 'totalValue')
+      .addSelect(`SUM(CASE WHEN quote.status = 'sent' THEN 1 ELSE 0 END)`, 'sentCount')
+      .addSelect(`SUM(CASE WHEN quote.status = 'created' THEN 1 ELSE 0 END)`, 'createdCount')
+      .addSelect('COUNT(quote.id)', 'totalQuotes')
+      .where('quote.createdById = :userId', { userId });
+
+    if (status) {
+      statsQuery.andWhere('quote.status = :status', { status });
+    }
+
+    const stats = await statsQuery.getRawOne();
+
     return {
       items,
       total,
       page,
       limit,
       totalPages: Math.ceil(total / limit),
+      stats: {
+        totalValue: Number(stats?.totalValue || 0),
+        sentCount: Number(stats?.sentCount || 0),
+        createdCount: Number(stats?.createdCount || 0),
+        totalQuotes: Number(stats?.totalQuotes || 0),
+      },
     };
   }
 
@@ -78,12 +99,36 @@ export class QuoteRepository extends AbstractRepository<Quote> {
 
     const [items, total] = await queryBuilder.getManyAndCount();
 
+    // calculate global aggregate stats
+    const statsQuery = this.quoteRepository
+      .createQueryBuilder('quote')
+      .select('SUM(quote.finalAmount)', 'totalValue')
+      .addSelect(`SUM(CASE WHEN quote.status = 'sent' THEN 1 ELSE 0 END)`, 'sentCount')
+      .addSelect(`SUM(CASE WHEN quote.status = 'created' THEN 1 ELSE 0 END)`, 'createdCount')
+      .addSelect('COUNT(quote.id)', 'totalQuotes');
+
+    if (salesUserId) {
+      statsQuery.andWhere('quote.createdById = :salesUserId', { salesUserId });
+    }
+
+    if (status) {
+      statsQuery.andWhere('quote.status = :status', { status });
+    }
+
+    const stats = await statsQuery.getRawOne();
+
     return {
       items,
       total,
       page,
       limit,
       totalPages: Math.ceil(total / limit),
+      stats: {
+        totalValue: Number(stats?.totalValue || 0),
+        sentCount: Number(stats?.sentCount || 0),
+        createdCount: Number(stats?.createdCount || 0),
+        totalQuotes: Number(stats?.totalQuotes || 0),
+      },
     };
   }
 
