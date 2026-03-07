@@ -56,11 +56,13 @@ export class UsersController {
   async getSalesAgents(
     @Query('page') page: number,
     @Query('limit') limit: number,
+    @Query('roleFilter') roleFilter: 'SALES' | 'ADMIN' | 'BOTH',
     @Res() res: Response,
   ) {
     const agents = await this.usersService.findAllSalesAgents(
       page || 1,
       limit || 10,
+      roleFilter || 'SALES'
     );
     return generateResponse(
       agents,

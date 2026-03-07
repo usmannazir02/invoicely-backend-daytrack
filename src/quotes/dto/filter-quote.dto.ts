@@ -34,4 +34,8 @@ export class FilterQuoteDto {
   @IsString()
   @IsOptional()
   salesUserId?: string;
+
+  @IsString()
+  @IsOptional()
+  roleFilter?: 'SALES' | 'ADMIN' | 'BOTH';
 }

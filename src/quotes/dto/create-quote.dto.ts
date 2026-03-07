@@ -73,6 +73,11 @@ export class CreateQuoteDto {
   @IsOptional()
   notes?: string;
 
+  @IsNumber()
+  @IsOptional()
+  @Type(() => Number)
+  systemSize?: number;
+
   @IsDateString()
   @IsOptional()
   validUntil?: string;

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityManager } from 'typeorm';
 import { AbstractRepository } from '../lib/common/database/sql/abstract.repository';
 import { Quote } from './entities';
+import { UserRole } from '../lib/common/enums/roles.enum';
 
 @Injectable()
 export class QuoteRepository extends AbstractRepository<Quote> {
@@ -78,6 +79,7 @@ export class QuoteRepository extends AbstractRepository<Quote> {
     limit: number,
     status?: string,
     salesUserId?: string,
+    roleFilter?: 'SALES' | 'ADMIN' | 'BOTH',
   ) {
     const queryBuilder = this.quoteRepository
       .createQueryBuilder('quote')
@@ -86,6 +88,9 @@ export class QuoteRepository extends AbstractRepository<Quote> {
 
     if (salesUserId) {
       queryBuilder.andWhere('quote.createdById = :salesUserId', { salesUserId });
+    } else if (roleFilter && roleFilter !== 'BOTH') {
+      const roleFilterMapping = roleFilter === 'ADMIN' ? UserRole.ADMIN : UserRole.SALES;
+      queryBuilder.andWhere('createdBy.role = :roleFilterMapping', { roleFilterMapping });
     }
 
     if (status) {
@@ -102,6 +107,7 @@ export class QuoteRepository extends AbstractRepository<Quote> {
     // calculate global aggregate stats
     const statsQuery = this.quoteRepository
       .createQueryBuilder('quote')
+      .leftJoin('quote.createdBy', 'createdBy')
       .select('SUM(quote.finalAmount)', 'totalValue')
       .addSelect(`SUM(CASE WHEN quote.status = 'sent' THEN 1 ELSE 0 END)`, 'sentCount')
       .addSelect(`SUM(CASE WHEN quote.status = 'created' THEN 1 ELSE 0 END)`, 'createdCount')
@@ -109,6 +115,9 @@ export class QuoteRepository extends AbstractRepository<Quote> {
 
     if (salesUserId) {
       statsQuery.andWhere('quote.createdById = :salesUserId', { salesUserId });
+    } else if (roleFilter && roleFilter !== 'BOTH') {
+      const roleFilterMapping = roleFilter === 'ADMIN' ? UserRole.ADMIN : UserRole.SALES;
+      statsQuery.andWhere('createdBy.role = :roleFilterMapping', { roleFilterMapping });
     }
 
     if (status) {

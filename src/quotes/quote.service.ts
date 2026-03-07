@@ -45,6 +45,7 @@ export class QuoteService {
       discountAmount,
       finalAmount,
       notes: createQuoteDto.notes,
+      systemSize: createQuoteDto.systemSize,
       validUntil: createQuoteDto.validUntil
         ? new Date(createQuoteDto.validUntil)
         : undefined,
@@ -71,7 +72,7 @@ export class QuoteService {
   }
 
   async findAll(filterDto: FilterQuoteDto, user: User) {
-    const { page = 1, limit = 10, status, salesUserId } = filterDto;
+    const { page = 1, limit = 10, status, salesUserId, roleFilter } = filterDto;
 
     // Admins can see all quotes, sales users can only see their own
     if (user.role === UserRole.ADMIN) {
@@ -80,6 +81,7 @@ export class QuoteService {
         limit,
         status,
         salesUserId,
+        roleFilter
       );
     }
 
@@ -145,6 +147,7 @@ export class QuoteService {
           });
           return quoteItem as QuoteItem;
         }),
+        systemSize: updateQuoteDto.systemSize !== undefined ? updateQuoteDto.systemSize : quote.systemSize,
         validUntil: updateQuoteDto.validUntil
           ? new Date(updateQuoteDto.validUntil)
           : quote.validUntil,
@@ -159,6 +162,7 @@ export class QuoteService {
           ...updateQuoteDto,
           discountAmount,
           finalAmount,
+          systemSize: updateQuoteDto.systemSize !== undefined ? updateQuoteDto.systemSize : quote.systemSize,
           validUntil: updateQuoteDto.validUntil
             ? new Date(updateQuoteDto.validUntil)
             : quote.validUntil,

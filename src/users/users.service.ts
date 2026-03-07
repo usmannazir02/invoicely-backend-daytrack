@@ -51,8 +51,18 @@ export class UsersService {
     return this.usersRepository.findOne({ id });
   }
 
-  async findAllSalesAgents(page: number = 1, limit: number = 10) {
-    return this.usersRepository.find({ role: UserRole.SALES, isDeleted: false }, page, limit);
+  async findAllSalesAgents(page: number = 1, limit: number = 10, roleFilter: 'SALES' | 'ADMIN' | 'BOTH' = 'SALES') {
+    let where: any = { isDeleted: false };
+
+    if (roleFilter === 'BOTH') {
+      where = [{ role: UserRole.SALES, isDeleted: false }, { role: UserRole.ADMIN, isDeleted: false }];
+    } else if (roleFilter === 'ADMIN') {
+      where.role = UserRole.ADMIN;
+    } else {
+      where.role = UserRole.SALES;
+    }
+
+    return this.usersRepository.find(where, page, limit);
   }
 
   async validateUser(email: string, password: string): Promise<User> {

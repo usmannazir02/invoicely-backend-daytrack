@@ -47,6 +47,9 @@ export class Quote extends AbstractEntity<Quote> {
   @Column({ nullable: true, type: 'text' })
   notes: string;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  systemSize: number;
+
   @Column({ nullable: true })
   validUntil: Date;
 
