@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Entities
-import { Brand, Inverter, SolarPanel, Structure, MiscItem } from './entities';
+import { Brand, Inverter, SolarPanel, Structure, MiscItem, Battery, ServiceItem, ElectricalItem } from './entities';
 
 // Repositories
 import {
@@ -11,6 +11,9 @@ import {
   SolarPanelRepository,
   StructureRepository,
   MiscItemRepository,
+  BatteryRepository,
+  ServiceItemRepository,
+  ElectricalItemRepository,
 } from './repositories';
 
 // Services
@@ -20,6 +23,9 @@ import {
   SolarPanelService,
   StructureService,
   MiscItemService,
+  BatteryService,
+  ServiceItemService,
+  ElectricalItemService,
 } from './services';
 
 // Controllers
@@ -29,6 +35,9 @@ import {
   SolarPanelController,
   StructureController,
   MiscItemController,
+  BatteryController,
+  ServiceItemController,
+  ElectricalItemController,
 } from './controllers';
 
 @Module({
@@ -39,6 +48,9 @@ import {
       SolarPanel,
       Structure,
       MiscItem,
+      Battery,
+      ServiceItem,
+      ElectricalItem,
     ]),
   ],
   controllers: [
@@ -47,6 +59,9 @@ import {
     SolarPanelController,
     StructureController,
     MiscItemController,
+    BatteryController,
+    ServiceItemController,
+    ElectricalItemController,
   ],
   providers: [
     // Repositories
@@ -55,12 +70,18 @@ import {
     SolarPanelRepository,
     StructureRepository,
     MiscItemRepository,
+    BatteryRepository,
+    ServiceItemRepository,
+    ElectricalItemRepository,
     // Services
     BrandService,
     InverterService,
     SolarPanelService,
     StructureService,
     MiscItemService,
+    BatteryService,
+    ServiceItemService,
+    ElectricalItemService,
   ],
   exports: [
     BrandService,
@@ -68,6 +89,9 @@ import {
     SolarPanelService,
     StructureService,
     MiscItemService,
+    BatteryService,
+    ServiceItemService,
+    ElectricalItemService,
   ],
 })
 export class ProductsModule {}

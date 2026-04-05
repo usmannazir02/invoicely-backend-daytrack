@@ -7,6 +7,9 @@ export enum QuoteItemType {
   INVERTER = 'inverter',
   STRUCTURE = 'structure',
   MISC_ITEM = 'misc_item',
+  BATTERY = 'battery',
+  SERVICE = 'service',
+  ELECTRICAL = 'electrical',
 }
 
 @Entity('quote_items')
