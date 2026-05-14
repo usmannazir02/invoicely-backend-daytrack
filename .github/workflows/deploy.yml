@@ -1,4 +1,4 @@
-name: Deploy via SSH
+name: Deploy Daytrack via SSH
 
 on:
   push:
@@ -20,26 +20,27 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 21098
           script: |
-            # 1. Sync the code
-            cd /home/sigmolabs/invoicely-backend
+            # 1. Navigate to the NEW project directory
+            cd /home/sigmolabs/invoicely-backend-daytrack
+            
+            # If git isn't initialized yet in this folder, you may need to clone first 
+            # or ensure the folder is a git repo. Assuming it is already linked:
             git fetch origin
             git reset --hard origin/main
-            git pull origin main
             
-            # 2. ACTIVATE the Virtual Environment FIRST
-            # npm will be "command not found" until this line runs
-            source /home/sigmolabs/nodevenv/invoicely-backend/20/bin/activate
+            # 2. Activate the specific Virtual Env for this project
+            # Note: Check the path in "Setup Node.js App" as it might differ slightly
+            source /home/sigmolabs/nodevenv/invoicely-backend-daytrack/20/bin/activate
             
-            # 3. Install project dependencies (including cookie-parser)
-            # This fixes the "Cannot find module 'cookie-parser'" error
+            # 3. Install dependencies
             npm install
             
-            # 4. Install build tools into the virtualenv binary path
-            npm install -g @nestjs/cli typescript @types/node
+            # 4. Install Nest CLI (locally or globally within the venv)
+            npm install -g @nestjs/cli
             
-            # 5. Build the project
+            # 5. Build
             nest build
             
-            # 6. Finalize and Restart
+            # 6. Restart the Node application
             mkdir -p tmp
             touch tmp/restart.txt
