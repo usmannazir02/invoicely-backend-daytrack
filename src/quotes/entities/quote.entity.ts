@@ -25,17 +25,20 @@ export class Quote extends AbstractEntity<Quote> {
   @Column({ nullable: true })
   customerAddress: string;
 
-  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  @Column('decimal', { precision: 15, scale: 2, default: 0 })
   totalAmount: number;
 
   @Column('decimal', { precision: 5, scale: 2, default: 0 })
   discountPercentage: number;
 
-  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  @Column('decimal', { precision: 15, scale: 2, default: 0 })
   discountAmount: number;
 
-  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  @Column('decimal', { precision: 15, scale: 2, default: 0 })
   finalAmount: number;
+
+  @Column('decimal', { precision: 15, scale: 2, default: 0 })
+  profitAmount: number;
 
   @Column({
     type: 'enum',

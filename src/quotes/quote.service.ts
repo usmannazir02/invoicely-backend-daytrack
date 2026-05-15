@@ -34,6 +34,7 @@ export class QuoteService {
     const discountPercentage = createQuoteDto.discountPercentage || 0;
     const discountAmount = (totalAmount * discountPercentage) / 100;
     const finalAmount = totalAmount - discountAmount;
+    const profitAmount = createQuoteDto.profitAmount ?? 0;
 
     const quote = this.quoteRepository.createInstance({
       customerName: createQuoteDto.customerName,
@@ -44,6 +45,7 @@ export class QuoteService {
       discountPercentage,
       discountAmount,
       finalAmount,
+      profitAmount,
       notes: createQuoteDto.notes,
       systemSize: createQuoteDto.systemSize,
       validUntil: createQuoteDto.validUntil
@@ -132,12 +134,14 @@ export class QuoteService {
         updateQuoteDto.discountPercentage ?? quote.discountPercentage;
       const discountAmount = (totalAmount * discountPercentage) / 100;
       const finalAmount = totalAmount - discountAmount;
+      const profitAmount = updateQuoteDto.profitAmount ?? quote.profitAmount ?? 0;
 
       Object.assign(quote, {
         ...updateQuoteDto,
         totalAmount,
         discountAmount,
         finalAmount,
+        profitAmount,
         items: items.map((item) => {
           const quoteItem = { ...item } as QuoteItem & { quote?: Quote };
           Object.defineProperty(quoteItem, 'quote', {
@@ -158,10 +162,12 @@ export class QuoteService {
         const discountAmount =
           (quote.totalAmount * updateQuoteDto.discountPercentage) / 100;
         const finalAmount = quote.totalAmount - discountAmount;
+        const profitAmount = updateQuoteDto.profitAmount ?? quote.profitAmount ?? 0;
         Object.assign(quote, {
           ...updateQuoteDto,
           discountAmount,
           finalAmount,
+          profitAmount,
           systemSize: updateQuoteDto.systemSize !== undefined ? updateQuoteDto.systemSize : quote.systemSize,
           validUntil: updateQuoteDto.validUntil
             ? new Date(updateQuoteDto.validUntil)

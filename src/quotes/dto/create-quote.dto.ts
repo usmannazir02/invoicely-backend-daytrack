@@ -69,6 +69,12 @@ export class CreateQuoteDto {
   @Max(100)
   discountPercentage?: number;
 
+  @IsNumber()
+  @IsOptional()
+  @Type(() => Number)
+  @Min(0)
+  profitAmount?: number;
+
   @IsString()
   @IsOptional()
   notes?: string;
