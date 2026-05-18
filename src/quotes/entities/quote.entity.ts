@@ -11,6 +11,12 @@ export enum QuoteStatus {
   REJECTED = 'rejected',
 }
 
+export enum SystemType {
+  ON_GRID = 'on_grid',
+  OFF_GRID = 'off_grid',
+  HYBRID = 'hybrid',
+}
+
 @Entity('quotes')
 export class Quote extends AbstractEntity<Quote> {
   @Column()
@@ -52,6 +58,9 @@ export class Quote extends AbstractEntity<Quote> {
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   systemSize: number;
+
+  @Column({ type: 'enum', enum: SystemType, nullable: true })
+  systemType: SystemType;
 
   @Column({ nullable: true })
   validUntil: Date;

@@ -12,7 +12,7 @@ import {
   IsEmail,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { QuoteItemType, QuoteStatus } from '../entities';
+import { QuoteItemType, QuoteStatus, SystemType } from '../entities';
 
 export class CreateQuoteItemDto {
   @IsEnum(QuoteItemType)
@@ -83,6 +83,10 @@ export class CreateQuoteDto {
   @IsOptional()
   @Type(() => Number)
   systemSize?: number;
+
+  @IsEnum(SystemType)
+  @IsOptional()
+  systemType?: SystemType;
 
   @IsDateString()
   @IsOptional()
