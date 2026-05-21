@@ -13,7 +13,7 @@ export class SolarPanel extends AbstractEntity<SolarPanel> {
   @Column({ nullable: true })
   wattage: number; // Wattage in numbers for filtering
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column({ default: true })

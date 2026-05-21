@@ -29,7 +29,7 @@ export class MiscItem extends AbstractEntity<MiscItem> {
   @Column({ nullable: true })
   unit: string; // e.g., "per meter", "per unit", "fixed"
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column({ default: true })

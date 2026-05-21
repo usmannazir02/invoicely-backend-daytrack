@@ -12,7 +12,7 @@ export class Battery extends AbstractEntity<Battery> {
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column({ default: true })

@@ -18,7 +18,7 @@ export class Structure extends AbstractEntity<Structure> {
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column({ default: true })

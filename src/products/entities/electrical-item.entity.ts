@@ -12,7 +12,7 @@ export class ElectricalItem extends AbstractEntity<ElectricalItem> {
   @Column({ nullable: true })
   unit: string; // e.g., "per kW", "fixed"
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column({ default: true })

@@ -10,7 +10,7 @@ export class Inverter extends AbstractEntity<Inverter> {
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column({ nullable: true })

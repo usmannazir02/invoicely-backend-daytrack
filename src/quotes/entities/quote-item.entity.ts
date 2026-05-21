@@ -33,7 +33,7 @@ export class QuoteItem extends AbstractEntity<QuoteItem> {
   @Column()
   itemName: string; // Snapshot of product name at time of quote
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   itemDescription: string;
 
   @Column('decimal', { precision: 15, scale: 2 })
