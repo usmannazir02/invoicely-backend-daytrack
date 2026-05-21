@@ -3,15 +3,64 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { QuoteRepository } from './quote.repository';
 import { CreateQuoteDto, UpdateQuoteDto, FilterQuoteDto } from './dto';
 import { Quote, QuoteItem, QuoteStatus } from './entities';
+import { QuoteItemType } from './entities/quote-item.entity';
 import { User } from '../users/entities/user.entity';
 import { UserRole } from '../lib/common/enums/roles.enum';
+import {
+  Structure,
+  SolarPanel,
+  Inverter,
+  Battery,
+  ServiceItem,
+  ElectricalItem,
+  MiscItem,
+} from '../products/entities';
 
 @Injectable()
 export class QuoteService {
-  constructor(private readonly quoteRepository: QuoteRepository) { }
+  constructor(
+    private readonly quoteRepository: QuoteRepository,
+    @InjectRepository(Structure)   private readonly structureRepo: Repository<Structure>,
+    @InjectRepository(SolarPanel)  private readonly solarPanelRepo: Repository<SolarPanel>,
+    @InjectRepository(Inverter)    private readonly inverterRepo: Repository<Inverter>,
+    @InjectRepository(Battery)     private readonly batteryRepo: Repository<Battery>,
+    @InjectRepository(ServiceItem) private readonly serviceItemRepo: Repository<ServiceItem>,
+    @InjectRepository(ElectricalItem) private readonly electricalItemRepo: Repository<ElectricalItem>,
+    @InjectRepository(MiscItem)    private readonly miscItemRepo: Repository<MiscItem>,
+    @InjectRepository(QuoteItem)   private readonly quoteItemRepo: Repository<QuoteItem>,
+  ) { }
+
+  private async backfillDescriptions(quote: Quote): Promise<void> {
+    const stale = quote.items?.filter((i) => !i.itemDescription) ?? [];
+    if (!stale.length) return;
+
+    const repoMap: Record<string, Repository<any>> = {
+      [QuoteItemType.STRUCTURE]:  this.structureRepo,
+      [QuoteItemType.SOLAR_PANEL]: this.solarPanelRepo,
+      [QuoteItemType.INVERTER]:   this.inverterRepo,
+      [QuoteItemType.BATTERY]:    this.batteryRepo,
+      [QuoteItemType.SERVICE]:    this.serviceItemRepo,
+      [QuoteItemType.ELECTRICAL]: this.electricalItemRepo,
+      [QuoteItemType.MISC_ITEM]:  this.miscItemRepo,
+    };
+
+    await Promise.all(
+      stale.map(async (item) => {
+        const repo = repoMap[item.itemType];
+        if (!repo) return;
+        const product = await repo.findOne({ where: { id: item.itemId } });
+        if (product?.description) {
+          item.itemDescription = product.description;
+          await this.quoteItemRepo.update(item.id, { itemDescription: product.description });
+        }
+      }),
+    );
+  }
 
   async create(createQuoteDto: CreateQuoteDto, user: User): Promise<Quote> {
     // Calculate totals
@@ -101,6 +150,8 @@ export class QuoteService {
     if (user.role !== UserRole.ADMIN && quote.createdById !== user.id) {
       throw new ForbiddenException('You do not have access to this quote');
     }
+
+    await this.backfillDescriptions(quote);
 
     return quote;
   }
