@@ -35,28 +35,29 @@ export class QuoteService {
     @InjectRepository(QuoteItem)   private readonly quoteItemRepo: Repository<QuoteItem>,
   ) { }
 
-  private async backfillDescriptions(quote: Quote): Promise<void> {
-    const stale = quote.items?.filter((i) => !i.itemDescription) ?? [];
-    if (!stale.length) return;
+  private async syncDescriptions(quote: Quote): Promise<void> {
+    const items = quote.items ?? [];
+    if (!items.length) return;
 
     const repoMap: Record<string, Repository<any>> = {
-      [QuoteItemType.STRUCTURE]:  this.structureRepo,
+      [QuoteItemType.STRUCTURE]:   this.structureRepo,
       [QuoteItemType.SOLAR_PANEL]: this.solarPanelRepo,
-      [QuoteItemType.INVERTER]:   this.inverterRepo,
-      [QuoteItemType.BATTERY]:    this.batteryRepo,
-      [QuoteItemType.SERVICE]:    this.serviceItemRepo,
-      [QuoteItemType.ELECTRICAL]: this.electricalItemRepo,
-      [QuoteItemType.MISC_ITEM]:  this.miscItemRepo,
+      [QuoteItemType.INVERTER]:    this.inverterRepo,
+      [QuoteItemType.BATTERY]:     this.batteryRepo,
+      [QuoteItemType.SERVICE]:     this.serviceItemRepo,
+      [QuoteItemType.ELECTRICAL]:  this.electricalItemRepo,
+      [QuoteItemType.MISC_ITEM]:   this.miscItemRepo,
     };
 
     await Promise.all(
-      stale.map(async (item) => {
+      items.map(async (item) => {
         const repo = repoMap[item.itemType];
         if (!repo) return;
         const product = await repo.findOne({ where: { id: item.itemId } });
-        if (product?.description) {
-          item.itemDescription = product.description;
-          await this.quoteItemRepo.update(item.id, { itemDescription: product.description });
+        const latest = product?.description ?? null;
+        if (latest !== item.itemDescription && item.id) {
+          item.itemDescription = latest;
+          await this.quoteItemRepo.update(item.id, { itemDescription: latest });
         }
       }),
     );
@@ -151,7 +152,7 @@ export class QuoteService {
       throw new ForbiddenException('You do not have access to this quote');
     }
 
-    await this.backfillDescriptions(quote);
+    await this.syncDescriptions(quote);
 
     return quote;
   }
